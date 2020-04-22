@@ -19,7 +19,7 @@ class Git
         if (!file_exists($this->git_dir . '/.git')){
             throw new \Exception(
                 sprintf("gitリポジトリがありません。 \n以下のコマンドを実行してください。\nmkdir -p %s\ncd %s\ngit clone git@github.com:tokyo-metropolitan-gov/covid19.git",
-                        $this->git_dir, $this->git_dir));
+                        $this->git_dir, dirname($this->git_dir)));
         }
         chdir($this->git_dir);
     }
