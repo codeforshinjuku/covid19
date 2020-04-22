@@ -53,7 +53,7 @@ Package operations: 11 installs, 0 updates, 0 removals
 [Error] gitリポジトリがありません。
 以下のコマンドを実行してください。
 mkdir -p /home/itoh/xxxxxxxx/covid19/data/gitrepo/covid19/
-cd /home/itoh/xxxxxxxx/covid19/data/gitrepo/covid19/
+cd /home/itoh/xxxxxxxx/covid19/data/gitrepo/
 git clone git@github.com:tokyo-metropolitan-gov/covid19.git
 ```
 mkdir / cd / git cloneコマンドをコピペして実行します。
