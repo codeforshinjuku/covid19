@@ -1,0 +1,16 @@
+{
+    "name": "code4shinjuku/covid19_shinjuku_pdf",
+    "authors": [
+        {
+            "name": "CodeForShinjuku",
+            "email": "info@codeforshinjuku.org"
+        }
+    ],
+    "require": {
+        "ulrichsg/getopt-php": "^3.3",
+        "guzzlehttp/guzzle": "^6.5",
+        "spatie/pdf-to-text": "^1.3"
+    },
+    "require-dev": {
+    }
+}
