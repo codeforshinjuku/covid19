@@ -15,8 +15,8 @@ $cmd->addOptions([
         Command::create('patient','Git::patient')->setDescription('患者の日別データをJSON出力する')
           ->addOptions([
               Option::create('p', 'php',      GetOpt::NO_ARGUMENT)->setDescription('PHPの配列で出力'),
-              Option::create('c', 'city',     GetOpt::REQUIRED_ARGUMENT)->setDescription('市区町村を指定して表示'),
-              Option::create('l', 'citylist', GetOpt::NO_ARGUMENT)->setDescription('市区町村のリストを表示'),
+              Option::create('c', 'city',     GetOpt::REQUIRED_ARGUMENT)->setDescription('区市町村を指定して表示'),
+              Option::create('l', 'citylist', GetOpt::NO_ARGUMENT)->setDescription('区市町村のリストを表示'),
           ]),
         ]);
 try {

@@ -52,7 +52,7 @@ class Git
         }
         if ($city) {
             if (!isset($data[$city])){
-                throw new \Exception($city . 'という市区町村コードのデータはありません。');
+                throw new \Exception($city . 'という区市町村コードのデータはありません。');
             }
             return $data[$city]['patients'];
         }
@@ -67,7 +67,7 @@ class Git
     
     
     /**
-     * @brief 市区町村の一覧を取得
+     * @brief 区市町村の一覧を取得
      * @param 
      * @retval
      */
@@ -112,7 +112,7 @@ class Git
             foreach ($datasets_array as $_d){
                 $_date = $_d['date'];
                 foreach ($_d['datasets'] as $_data){
-                    $_city = $_data['code']; // 'label'に表記ゆれ(市区町村の有無)があるのでcode
+                    $_city = $_data['code']; // 'label'に表記ゆれ(区市町村の有無)があるのでcode
                     if (!isset($data[$_city])) {
                         $data[$_city] = [
                             'city'     => $_data,

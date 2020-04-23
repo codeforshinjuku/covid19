@@ -1,6 +1,6 @@
-# Code For Shinjuku Covid19感染者データの市区町村別整形スクリプト
+# Code For Shinjuku Covid19感染者データの区市町村別整形スクリプト
 
-https://github.com/tokyo-metropolitan-gov/covid19 のデータを市区町村別にしたものです。
+https://github.com/tokyo-metropolitan-gov/covid19 のデータを区市町村別にしたものです。
 
 PHPをコマンドラインから実行させることで実行します。PHP7.3で確認しています。
 
@@ -111,8 +111,8 @@ Usage: ./gitdata.sh patient [options] [operands]
 Options:
   -h, --help        Show this help and quit
   -p, --php         PHPの配列で出力
-  -c, --city <arg>  市区町村を指定して表示
-  -l, --citylist    市区町村のリストを表示
+  -c, --city <arg>  区市町村を指定して表示
+  -l, --citylist    区市町村のリストを表示
 ```
 
 #### 例：新宿区の感染者データをJSONで出力
