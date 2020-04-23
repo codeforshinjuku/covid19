@@ -22,7 +22,7 @@ remote: Compressing objects: 100% (13/13), done.
 remote: Total 16 (delta 1), reused 16 (delta 1), pack-reused 0
 Receiving objects: 100% (16/16), 10.36 KiB | 10.36 MiB/s, done.
 Resolving deltas: 100% (1/1), done.
-$ ls
+~$ ls
 covid19
 ```
 ### composer.jsonのあるディレクトリに移動して、composer installする。
@@ -52,15 +52,15 @@ Package operations: 11 installs, 0 updates, 0 removals
 ```
 [Error] gitリポジトリがありません。
 以下のコマンドを実行してください。
-mkdir -p /home/itoh/xxxxxxxx/covid19/data/gitrepo/covid19/
-cd /home/itoh/xxxxxxxx/covid19/data/gitrepo/
+mkdir -p /home/codeforshinjuku/xxxxxxxx/covid19/data/gitrepo/covid19/
+cd /home/codeforshinjuku/xxxxxxxx/covid19/data/gitrepo/
 git clone git@github.com:tokyo-metropolitan-gov/covid19.git
 ```
 mkdir / cd / git cloneコマンドをコピペして実行します。
 
 ```
-~/covid19$ mkdir -p /home/itoh/xxxxxxxx/covid19/data/gitrepo/covid19/
-~/covid19$ cd /home/itoh/xxxxxxxx/covid19/data/gitrepo
+~/covid19$ mkdir -p /home/codeforshinjuku/xxxxxxxx/covid19/data/gitrepo/covid19/
+~/covid19$ cd /home/codeforshinjuku/xxxxxxxx/covid19/data/gitrepo
 ~/xxxxxxxx/covid19/data/gitrepo/covid19$ git clone git@github.com:tokyo-metropolitan-gov/covid19.git
 Cloning into 'covid19'...
 remote: Enumerating objects: 256856, done.
@@ -92,7 +92,6 @@ Commands:
 
 先ほどと同じコマンドを実行すると、GitHubから東京都Covid19リポジトリをアップデートします。
 ```
-~/covid19/data/gitrepo$ cd ../..
 ~/covid19$ ./gitdata.sh update
 Already up to date.
 ```
