@@ -16,6 +16,7 @@ $cmd->addOptions([
           ->addOptions([
               Option::create('p', 'php',      GetOpt::NO_ARGUMENT)->setDescription('PHPの配列で出力'),
               Option::create('c', 'city',     GetOpt::REQUIRED_ARGUMENT)->setDescription('区市町村を指定して表示'),
+              Option::create('d', 'diff',     GetOpt::NO_ARGUMENT)->setDescription('前日との差分の数を表示'),
               Option::create('l', 'citylist', GetOpt::NO_ARGUMENT)->setDescription('区市町村のリストを表示'),
           ]),
         ]);
@@ -42,6 +43,9 @@ try {
         if ($cmd->getOption('l')){
             $args['citylist'] = true;
         }
+        if ($cmd->getOption('d')){
+            $args['diff'] = true;
+        }
         break;
     }
     $ret = call_user_func_array([
@@ -49,7 +53,7 @@ try {
         $command_name,
         ], $args);
     if ($cmd->getOption('php')){
-        var_dump($ret); 
+        var_export($ret); 
     }
     else {
         echo json_encode($ret);

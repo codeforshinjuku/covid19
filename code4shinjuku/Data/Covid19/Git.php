@@ -38,14 +38,22 @@ class Git
         // echo "Git repository updated. データを集積します。\n";
     }
     
+
+    
+    
     
     /**
      * @brief 患者の区別JSONデータを表示する
      * @param 
      * @retval
      */
-    public function patient($city, $citylist)
+    public function patient($city, $citylist, $diff)
     {
+        $data_name = 'patients';
+        if ($diff){
+            $data_name = 'diff';
+        }
+        
         $data = $this->getPatientData();
         if ($citylist){
             return $this->getPatientCityList($data);
@@ -54,14 +62,15 @@ class Git
             if (!isset($data[$city])){
                 throw new \Exception($city . 'という区市町村コードのデータはありません。');
             }
-            return $data[$city]['patients'];
-        }
-        $patients = [];
-        foreach ($data as $citycode => $d){
-            $patients[$citycode] = $d['patients'];
+            return $data[$city][$data_name];
         }
         
-        return $patients;
+        $ret = [];
+        foreach ($data as $citycode => $d){
+            $ret[$citycode] = $d[$data_name];
+        }
+
+        return $ret;
     }
     
     
@@ -117,10 +126,15 @@ class Git
                         $data[$_city] = [
                             'city'     => $_data,
                             'patients' => [],
+                            'diff'   => [],
                             ];
                         unset($data[$_city]['city']['count']);
                     }
                     $data[$_city]['patients'][$_date] = $_data['count'];
+                    $yesterday = date('Y/n/j', strtotime('-1 day', strtotime($_date)));
+                    $data[$_city]['diff'][$_date] = 
+                      isset($data[$_city]['patients'][$yesterday])
+                        ? $_data['count'] - $data[$_city]['patients'][$yesterday] : 0;
                 }
             }
         }
