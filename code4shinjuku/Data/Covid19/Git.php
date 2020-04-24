@@ -43,7 +43,7 @@ class Git
     
     
     /**
-     * @brief 患者の区別JSONデータを表示する
+     * @brief 患者の区市町村別JSONデータを表示する
      * @param 
      * @retval
      */
@@ -70,6 +70,27 @@ class Git
             $ret[$citycode] = $d[$data_name];
         }
 
+        return $ret;
+    }
+    
+    
+    /**
+     * @brief 退院者の区市町村別JSONデータを表示する
+     * @param 
+     * @retval
+     */
+    public function data($diff)
+    {
+        $ret = $this->getDataData();
+        if ($diff){
+            foreach ($ret as &$_r){
+                $yesterday = 0;
+                foreach ($_r as $k=>$day_count){
+                    $_r[$k] -= $yesterday;
+                    $yesterday = $day_count;
+                }
+            }
+        }
         return $ret;
     }
     
@@ -142,5 +163,65 @@ class Git
             return $d['city']['code'] > 100000;
         });
         return $data;
+    }
+
+
+    
+    /**
+     * @brief tokyo-metropolitan-gov/covid19のdata/data.jsonから日別のデータを取得
+     * @param 
+     * @retval
+     */
+    private function getDataData()
+    {
+        // git周りの処理はgetPatientData()と同じだけど、共通化するとコミットが増えた場合にメモリが大量に必要になるのであえてコピー
+        $target_file = 'data/data.json';
+        $r = Util::system('git log --oneline '. $target_file);
+        $ret = [
+            'patient'   => [],
+            'discharge' => [],
+//            'age'       => [],
+            ]; 
+        foreach (array_reverse(explode("\n", trim($r['stdout']))) as $log){
+            $com_id = current(explode(" ", $log));
+            $cmd = sprintf('git show %s:%s > /dev/stdout', $com_id, $target_file);
+            $r = Util::system($cmd);
+            $d = json_decode($r['stdout'], true);
+            
+            $data = $d['patients'];
+            if (!isset($data['date']) || !$data_date = strtotime($data['date'])) {
+                continue;
+            }
+            $date = date('Y/n/j', $data_date);
+            $ret['patient'][$date]   = 0;
+            $ret['discharge'][$date] = 0;
+            foreach ($data['data'] as $_d){
+                $ret['patient'][$date]++;
+                if (isset($_d['退院']) && $_d['退院']){
+                    $ret['discharge'][$date]++;
+                }
+            }
+            // printf("%s %s\t=> %s\t%s\n", $com_id, $date, $ret['patient'][$date], $ret['discharge'][$date]);
+        }
+        
+        // 3月9日までは毎日取れてないので削除
+        foreach ($ret as &$_r){
+            $_r = array_filter($_r, function($date){
+                return !in_array($date, ['2020/3/1','2020/3/3', '2020/3/4', '2020/3/6']);
+            }, ARRAY_FILTER_USE_KEY );
+        }
+        
+        return $ret;
+    }
+
+    /**
+     * @brief 東京都のgitリポジトリからcovid19/data/data.jsonを取得
+     * @param 
+     * @retval array
+     */
+    private function getDataDataJson()
+    {
+        return json_decode(
+            file_get_contents($this->git_dir . '/data/data.json'), true);
     }
 }

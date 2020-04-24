@@ -6,18 +6,25 @@ use GetOpt\GetOpt;
 use GetOpt\Option;
 use GetOpt\Command;
 
+date_default_timezone_set('Asia/Tokyo');
+
 // set command options
 $cmd = new GetOpt();
 $cmd->addOptions([
     Option::create('h', 'help', GetOpt::NO_ARGUMENT)->setDescription('Show this help and quit'),
     ])->addCommands([
-        Command::create('update', 'Git::update')->setDescription('tokyo-metropolitan-gov/covid19のgitリポジトリをアップデート'),
-        Command::create('patient','Git::patient')->setDescription('患者の日別データをJSON出力する')
+        Command::create('update', 'Git::update')->setDescription('東京都のcovid19のgitリポジトリをアップデート'),
+        Command::create('patient','Git::patient')->setDescription('東京都のcovid19のdata/patient.jsonをもとに患者の日別データをJSON出力する')
           ->addOptions([
               Option::create('p', 'php',      GetOpt::NO_ARGUMENT)->setDescription('PHPの配列で出力'),
               Option::create('c', 'city',     GetOpt::REQUIRED_ARGUMENT)->setDescription('区市町村を指定して表示'),
               Option::create('d', 'diff',     GetOpt::NO_ARGUMENT)->setDescription('前日との差分の数を表示'),
               Option::create('l', 'citylist', GetOpt::NO_ARGUMENT)->setDescription('区市町村のリストを表示'),
+          ]),
+        Command::create('data','Git::data')->setDescription('東京都のcovid19のdata/data.jsonをもとに集計しJSON出力する(速報値のため必ずしも正確ではない？)')
+          ->addOptions([
+              Option::create('p', 'php',      GetOpt::NO_ARGUMENT)->setDescription('PHPの配列で出力'),
+              Option::create('d', 'diff',     GetOpt::NO_ARGUMENT)->setDescription('前日との差分の数を表示'),
           ]),
         ]);
 try {
@@ -34,8 +41,9 @@ try {
     switch($command_name) {
       case 'patient':
         $args = [
-            'city' => false,
+            'city'     => false,
             'citylist' => false,
+            'diff'     => false,
             ];
         if ($city = $cmd->getOption('c')){
             $args['city'] = $city;
@@ -43,6 +51,14 @@ try {
         if ($cmd->getOption('l')){
             $args['citylist'] = true;
         }
+        if ($cmd->getOption('d')){
+            $args['diff'] = true;
+        }
+        break;
+      case 'data':
+        $args = [
+            'diff' => false,
+            ];
         if ($cmd->getOption('d')){
             $args['diff'] = true;
         }
