@@ -82,4 +82,25 @@ class Util
         return $string;
     }
     
+    
+    
+    /**
+     * @brief CSV形式で出力する
+     * @param ['header' => ['head1', 'head2', 'head3'], 'data' =>[[1,2,3],[3,4,5],[6,7,8]...]]]
+     * @retval
+     */
+    public static function VarDumpCSV($data)
+    {
+        array_unshift($data['data'] , $data['header']);
+        foreach ($data['data'] as &$v){
+            $v = array_map(function($csv) {
+                if (preg_match('/[,"\r\n]/', $csv)) {
+                    $csv = preg_replace('/"/', "\"\"", $csv);
+                    $csv = "\"$csv\"";
+                }
+                return $csv;
+            }, $v);
+            echo implode(',', $v). "\r\n";
+        }
+    }
 }
