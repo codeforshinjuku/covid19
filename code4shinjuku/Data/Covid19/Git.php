@@ -47,7 +47,7 @@ class Git
      * @param 
      * @retval
      */
-    public function patient($city, $citylist, $diff)
+    public function patient($city, $citylist, $diff, $format)
     {
         $data_name = 'patients';
         if ($diff){
@@ -62,12 +62,29 @@ class Git
             if (!isset($data[$city])){
                 throw new \Exception($city . 'という区市町村コードのデータはありません。');
             }
-            return $data[$city][$data_name];
         }
+
         
         $ret = [];
-        foreach ($data as $citycode => $d){
-            $ret[$citycode] = $d[$data_name];
+        foreach ($data as $citycode => $d) {
+            if (!$city || ($city == $citycode)){
+                if ($format === 'csv'){
+                    if (!isset($ret['header'])){
+                        $ret['header'] = ['発表日', '区市町村', '人数'];
+                        $ret['data']   = [];
+                    }
+                    foreach ($d[$data_name] as $date => $_num){
+                        $ret['data'][]   = [
+                            date('n/j/Y', strtotime($date)),
+                            $d['city']['label'],
+                            $_num
+                            ];
+                    }
+                }
+                else {
+                    $ret[$citycode] = $d[$data_name];
+                }
+            }
         }
 
         return $ret;
@@ -166,7 +183,6 @@ class Git
     }
 
 
-    
     /**
      * @brief tokyo-metropolitan-gov/covid19のdata/data.jsonから日別のデータを取得
      * @param 

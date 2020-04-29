@@ -2,6 +2,7 @@
 <?php
 require_once 'vendor/autoload.php';
 require_once 'code4shinjuku/Data/Covid19/Git.php';
+require_once 'code4shinjuku/Util.php';
 use GetOpt\GetOpt;
 use GetOpt\Option;
 use GetOpt\Command;
@@ -16,7 +17,10 @@ $cmd->addOptions([
         Command::create('update', 'Git::update')->setDescription('東京都のcovid19のgitリポジトリをアップデート'),
         Command::create('patient','Git::patient')->setDescription('東京都のcovid19のdata/patient.jsonをもとに患者の日別データをJSON出力する')
           ->addOptions([
-              Option::create('p', 'php',      GetOpt::NO_ARGUMENT)->setDescription('PHPの配列で出力'),
+              Option::create('f', 'format',   GetOpt::REQUIRED_ARGUMENT)->setDescription('PHP/CSVの配列で出力')
+                ->setValidation(function($value){
+                    return in_array(strtolower($value), ['csv', 'php']);
+                }, '--formatオプションは csv, php が有効です。'),
               Option::create('c', 'city',     GetOpt::REQUIRED_ARGUMENT)->setDescription('区市町村を指定して表示'),
               Option::create('d', 'diff',     GetOpt::NO_ARGUMENT)->setDescription('前日との差分の数を表示'),
               Option::create('l', 'citylist', GetOpt::NO_ARGUMENT)->setDescription('区市町村のリストを表示'),
@@ -44,6 +48,7 @@ try {
             'city'     => false,
             'citylist' => false,
             'diff'     => false,
+            'format'   => 'json',
             ];
         if ($city = $cmd->getOption('c')){
             $args['city'] = $city;
@@ -53,6 +58,9 @@ try {
         }
         if ($cmd->getOption('d')){
             $args['diff'] = true;
+        }
+        if ($format = $cmd->getOption('f')){
+            $args['format'] = $format;
         }
         break;
       case 'data':
@@ -68,8 +76,11 @@ try {
         new Code4Shinjuku\Data\Covid19\Git(__DIR__),
         $command_name,
         ], $args);
-    if ($cmd->getOption('php')){
+    if ($cmd->getOption('f') === 'php'){
         var_export($ret); 
+    }
+    else if ($cmd->getOption('f') === 'csv'){
+        \Code4Shinjuku\Util::VarDumpCSV($ret);
     }
     else {
         echo json_encode($ret);
