@@ -173,6 +173,9 @@ class Git
                     $data[$_city]['diff'][$_date] = 
                       isset($data[$_city]['patients'][$yesterday])
                         ? $_data['count'] - $data[$_city]['patients'][$yesterday] : 0;
+                    if ($data[$_city]['diff'][$_date] < 0){
+                        $data[$_city]['diff'][$_date] = 0;
+                    }
                 }
             }
         }
