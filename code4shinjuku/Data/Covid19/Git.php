@@ -207,7 +207,7 @@ class Git
             $r = Util::system($cmd);
             $d = json_decode($r['stdout'], true);
             
-            $data = $d['patients'];
+            $data = $d['patients'] ?? [];
             if (!isset($data['date']) || !$data_date = strtotime($data['date'])) {
                 continue;
             }
